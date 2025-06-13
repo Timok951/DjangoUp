@@ -1,0 +1,24 @@
+{% extends 'main/base.html' %} {% block content%}
+
+<h1>Тип продукта: {{ product_type.name }}</h1>
+
+<table>
+  <tr>
+    <th>ID</th>
+    <td>{{ product_type.id }}</td>
+  </tr>
+  <tr>
+    <th>Название</th>
+    <td>{{ product_type.name }}</td>
+  </tr>
+  <tr>
+    <th>Описание</th>
+    <td>{{ product_type.description }}</td>
+  </tr>
+</table>
+
+<a href="{% url 'product_type_list' %}">Вернуться к списку</a>
+<a href="{% url 'product_type_update' product_type.pk %}">Редактировать</a>
+<a href="{% url 'product_type_confirm_delete' product_type.pk %}">Удалить</a>
+
+{% endblock %}

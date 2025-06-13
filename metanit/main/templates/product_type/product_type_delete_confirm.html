@@ -1,0 +1,10 @@
+{% extends 'main/base.html' %} {% block content%}
+
+<h1>Удалить {{ product_type.name }}?</h1>
+<form method="post">
+  {% csrf_token %}
+  <button type="submit">Удалить</button>
+</form>
+<a href="{% url 'product_type_list' %}">Отмена</a>
+
+{% endblock %}

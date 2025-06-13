@@ -1,0 +1,61 @@
+{% extends 'main/base.html' %} {% block content%}
+
+<h1>Чип: {{ chip.name }}</h1>
+
+<table>
+  <tr>
+    <th>ID</th>
+    <td>{{ chip.id }}</td>
+  </tr>
+  <tr>
+    <th>Название</th>
+    <td>{{ chip.name }}</td>
+  </tr>
+  <tr>
+    <th>Описание</th>
+    <td>{{ chip.description|default:"—" }}</td>
+  </tr>
+  <tr>
+    <th>Цена</th>
+    <td>{{ chip.price|default:"—" }} ₽</td>
+  </tr>
+  <tr>
+    <th>Изображение</th>
+    <td>
+      {% if chip.photo %}
+      <img
+        src="{{ chip.photo.url }}"
+        alt="Изображение"
+        style="max-width: 200px"
+      />
+      {% else %} Нет изображения {% endif %}
+    </td>
+  </tr>
+  <tr>
+    <th>Дата добавления</th>
+    <td>{{ chip.create_date|date:"d.m.Y H:i" }}</td>
+  </tr>
+  <tr>
+    <th>Доступен к заказу</th>
+    <td>{{ chip.is_exists|yesno:"Да,Нет" }}</td>
+  </tr>
+  <tr>
+    <th>Категория</th>
+    <td>{{ chip.category.name }}</td>
+  </tr>
+  <tr>
+    <th>Производитель</th>
+    <td>{{ chip.producer.name }}</td>
+  </tr>
+  <tr>
+    <th>Тип продукта</th>
+    <td>{{ chip.product_type.name }}</td>
+  </tr>
+</table>
+
+<br />
+
+<a href="{% url 'chip_list' %}">← Вернуться к списку</a> |
+<a href="{% url 'chip_update' chip.pk %}">Редактировать</a> |
+<a href="{% url 'chip_delete' chip.pk %}">Удалить</a>
+{% endblock %}

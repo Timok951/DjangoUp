@@ -1,0 +1,20 @@
+{% extends 'main/base.html' %} {% block content%}
+
+<h1>Производители</h1>
+<a href="{% url 'product_type_create' %}">Добавить нового производителя</a>
+<ul>
+  {% for product_type in product_type %}
+  <li>
+    <a href="{% url 'product_type_detail' product_type.pk %}"
+      >{{ product_type.name }}</a
+    >
+
+    <a href="{% url 'product_type_update' product_type.pk %}">Редактировать</a>
+    <a href="{% url 'product_type_confirm_delete' product_type.pk %}"
+      >Удалить</a
+    >
+  </li>
+  {% endfor %}
+</ul>
+
+{%endblock%}

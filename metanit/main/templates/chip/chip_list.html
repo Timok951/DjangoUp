@@ -1,0 +1,15 @@
+{% extends 'main/base.html' %} {% block content%}
+
+<h1>Производители</h1>
+<a href="{% url 'chip_create' %}">Добавить нового производителя</a>
+<ul>
+  {% for chip in chip %}
+  <li>
+    <a href="{% url 'chip_detail' chip.pk %}">{{ chip.name }}</a>
+    <a href="{% url 'chip_update' chip.pk %}">Редактировать</a>
+    <a href="{% url 'chip_confirm_delete' chip.pk %}">Удалить</a>
+  </li>
+  {% endfor %}
+</ul>
+
+{% endblock %}

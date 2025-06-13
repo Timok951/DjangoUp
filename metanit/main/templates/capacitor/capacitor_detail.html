@@ -1,0 +1,15 @@
+{% extends 'main/base.html' %} {% block content%}
+
+<h1>{{capacitor.name}}</h1>
+<p>{{ capacitor.description }}</p>
+<p>Цена: {{capacitor.price }} рубей</p>
+<p>Размер: {{ capacitor.capacity }}</p>
+<img src="{{ capacitor.photo.url }}" alt="{{capacitor.name}}" />
+<p>Категория: {{ capacitor.category}}</p>
+<p>Производитель {{capacitor.producer}}</p>
+<p>Тип продукта {{capacitor.product_type}}</p>
+
+<a href="{% url 'capacitor_list' %}">Вернутся к списку конденсаторов </a>
+<a href="{% url 'capacitor_update'  capacitor.pk %}"> Редактировать </a>
+<a href="{% url 'capacitor_confirm_delete' capacitor.pk %}">Удалить</a>
+{% endblock %}

@@ -1,0 +1,16 @@
+{% extends 'main/base.html' %} {% block content%}
+
+<h1>Кондансотр</h1>
+
+<a href="{% url 'capacitor_create'%}"> Добавить новую позицию </a>
+
+<ul>
+  {%for capacitor in capacitor %}
+  <li>
+    <a href="{% url 'capacitor_detail' capacitor.pk %}"> {{capacitor.name}} </a>
+    <a href="{% url 'capacitor_update' capacitor.pk %}">Редактировать</a>
+    <a href="{% url 'capacitor_confirm_delete' capacitor.pk %}">Удалить</a>
+  </li>
+  {% endfor %}
+</ul>
+{% endblock %}

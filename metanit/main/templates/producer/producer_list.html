@@ -1,0 +1,11 @@
+<h1>Производители</h1>
+<a href="{% url 'producer_create' %}">Добавить нового производителя</a>
+<ul>
+  {% for producer in producer %}
+  <li>
+    <a href="{% url 'producer_detail' producer.pk %}">{{ producer.name }}</a>
+    <a href="{% url 'producer_update' producer.pk %}">Редактировать</a>
+    <a href="{% url 'producer_confirm_delete' producer.pk %}">Удалить</a>
+  </li>
+  {% endfor %}
+</ul>

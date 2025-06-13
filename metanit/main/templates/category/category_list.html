@@ -1,0 +1,14 @@
+{% extends 'main/base.html' %} {% block content%}
+
+<h1>Категории</h1>
+<a href="{% url "category_create" %}"> Добавить новую позицию</a>
+<ul> 
+    {% for category in category %}
+    <li>
+        <a href= "{% url "category_detail" category.pk%}"> {{category.name}} </a>
+        <a href= "{% url 'category_update'  category.pk %}"> Редактировать </a>
+        <a href= "{% url 'category_confirm_delete'  category.pk %}"> Удалить </a>
+    </li>
+    {% endfor %}
+</ul>
+{% endblock %}
