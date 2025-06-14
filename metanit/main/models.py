@@ -8,7 +8,6 @@ class Category(models.Model):
     #name — это строковое поле (CharField), которое обязательно должно быть заполнено
     description = models.TextField(null=True, blank=True, verbose_name="Описание")
     #Поле description — это текстовое поле (TextField), которое может быть пустым (null=True) или не заполненным (blank=True). 
-    
     #Метод __str__ возвращает значение поля name, что позволяет легко идентифицировать объекты этой модели при работе с ними.
     def __str__(self):
         return self.name
@@ -122,15 +121,29 @@ class User(models.Model):
         verbose_name_plural = 'Пользователь'
 
 class Order(models.Model):
-    user = models.ForeignKey('User', on_delete=models.CASCADE, verbose_name='Пользователь')
     create_date = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания заказа')
-    
+    #Константные переменные, типов доставки
+    SHOP = "SH"
+    COURIER = "CR"
+    PICKUPPOINT = "PP"
+    TYPE_DELIVERY = [
+        (SHOP, 'Самовывоз'),
+        (COURIER,'Курьер' ),
+        (PICKUPPOINT, 'Пункт выдачи заказов'),
+    ]
+    comment = models.TextField(max_length=MAX_LENGTH, blank=True, null=True, verbose_name='Коментарий')
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    delivery_address = models.CharField(max_length=MAX_LENGTH,blank=True, null=True,verbose_name='Адрес доставки')   
+    delivery_type= models.CharField(max_length=2, choices=TYPE_DELIVERY, default=SHOP, verbose_name='Тип доставки' )
+    date_create = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания заказа')
+    date_finish = models.DateTimeField(blank=True, null=True, verbose_name='Дата завершения заказа')
+
     def __str__(self):
-        return f"Заказ{self.id} - {self.create_date}."
+        return f"Заказ{self.pk} - {self.yser.nick}."
     
     class Meta:
         verbose_name = 'Заказ'
-        verbose_name_plural = 'Заказ'
+        verbose_name_plural = 'Заказы'
 
 class Order_Capacitor(models.Model):
     capacitor = models.OneToOneField('Capacitor', on_delete=models.CASCADE, null=True, blank=True)
@@ -167,3 +180,4 @@ class Order_Chip(models.Model):
     class Meta:
         verbose_name = 'Чип'
         verbose_name_plural = 'Чип'
+

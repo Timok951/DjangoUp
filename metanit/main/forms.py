@@ -55,3 +55,10 @@ class Order_ChipForm(forms.ModelForm):
     class Meta:
         model = Order_Chip
         fields = ['chip', 'amount', 'order']
+
+
+class LoginForm(AuthenticationForm):
+    username = Forms.Charfield(
+        label="Логин пользователя",
+        
+    )

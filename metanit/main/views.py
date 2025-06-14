@@ -38,6 +38,11 @@ class CapacitorDetailView(DetailView):
     template_name='capacitor/capacitor_detail.html'
     context_object_name = 'capacitor'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        cpntext['form_basket'] - BasketAddProductForm()
+        return context
+
 class CapacitorCreateView(CreateView):
     model = Capacitor
     form_class = CapacitorForm
@@ -325,3 +330,18 @@ class Order_ChipDeleteView(DeleteView):
     model = Order
     template_name = 'order_chip/order_chip_confirm_delete.html'
     success_url = reverse_lazy('order_chip_list')
+
+def login_user(request):
+    if request.method == 'POST':
+        form = LoginForm(data=request.POST)
+        if form.is_valid():
+            if request.Get.get('next'):
+                return redirect(request.GET.get('next'))
+            return redirect('capacitor_list_view')
+        else:
+            form = LoginForm()
+            return render(request, 'auth/login.html', context={'form':form})
+
+def logout_user(requers):
+    logout(request)
+    return redirect('capacitor_list_view')

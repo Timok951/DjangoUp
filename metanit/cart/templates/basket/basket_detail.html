@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+
+{% load static %}
+
+{% block title_name %}Ваша корзина{% endblock title_name %}
+
+{% block content %}
+    <div class="p3">
+        <h1> корзина </h1>
+        <table class='table table bordered my-2'>
+            <thead>
+                <tr>
+                    <th>Изображение</th>
+                <tr>
+                </thead>
+                <tbody>
+                    {% for item in basket %}
+                    
+                    {% with item.product as item.product %}
+                    
+                    <tr>
+                        <td>
+                            {%if item.product.photo%}
+                            <img src="{{product.photo.url}}" alt="..."/>
+                            {% else %}
+                            нет фото
+                            {% endif %}
+                        </td>
+                            <a href="{% url 'clothes_detail_view' product.pk%}"> {{product.name}} </a>
+                        <td>
+                            {{item.count}}
+                        </td>
+                            {{item.price}}
+                        <td>
+                        </td>
+                            {{item.total_price}}
+                        <td>
+                        </td>
+
+                        <td>
+                            <a href="{% url 'basket_remove' product.pk %}" class="btn btn-outline-danger">Удалить из корзины</a>
+                        </td>
+                        
+                        <td>
+                            {{item.price}}
+                        </td>
+
+                    {% endwith %}
+                {% endfor %}
+                <tr>
+                    <td> Всего: </td>
+                    <td>{{basket|length}} </td>
+                    <td colspan="2"> {{basket.get_total_price}} руб</td>
+                    <td> <a href="{%url 'basket_clear'%}">
+                    </tr>
+                </thbody>
+            </table>
+            <a href="{% url 'clothes_list_view' %}">Назад</a>
+            {%if basket| length > 0%}
+                <a href="{%url 'open_order'%}"> Купить</a>
+            {%endif %}
+        </div>
+{% endblock content %}
+
+
+    
