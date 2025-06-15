@@ -139,7 +139,7 @@ class Order(models.Model):
     date_finish = models.DateTimeField(blank=True, null=True, verbose_name='Дата завершения заказа')
 
     def __str__(self):
-        return f"Заказ{self.pk} - {self.yser.nick}."
+        return f"Заказ{self.pk} - {self.user.nick} ({self.date_create})"
     
     class Meta:
         verbose_name = 'Заказ'

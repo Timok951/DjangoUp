@@ -58,7 +58,7 @@ class Order_ChipForm(forms.ModelForm):
 
 
 class LoginForm(AuthenticationForm):
-    username = Forms.Charfield(
+    username = forms.Charfield(
         label="Логин пользователя",
         
     )
