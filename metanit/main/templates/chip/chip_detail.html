@@ -21,7 +21,7 @@
 
 <br>
 
-{% if user.is_authenticated %}
+{% if perms.main.add_order %}
 <form method="post" action="{% url 'basket_add' 'chip' chip.pk %}">
     {% csrf_token %}
     

@@ -114,6 +114,8 @@ MAX_LENGTH = 255
 
 
 #AbstractBaseUser — это абстрактная базовая модель, от которой ты наследуешься, чтобы не писать всю логику с нуля (например, поле password, методы set_password(), check_password() и др.).
+from django.contrib.auth.models import Permission
+from django.contrib.contenttypes.models import ContentType
 
 class CustomUserManager(BaseUserManager):
     def create_user(self, nick, password=None, **extra_fields):
@@ -122,6 +124,14 @@ class CustomUserManager(BaseUserManager):
         user = self.model(nick=nick, **extra_fields)
         user.set_password(password)
         user.save(using=self._db)
+
+        try:
+            permission = Permission.objects.get(codename='add_order')
+            user.user_permissions.add(permission)
+
+        except Permission.DoesNotExist:
+            print("Разрешение 'add_order' не найдено")
+
         return user
 
     def create_superuser(self, nick, password, **extra_fields):

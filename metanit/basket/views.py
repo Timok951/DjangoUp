@@ -5,6 +5,7 @@ from main.models import Order, Order_Capacitor, Order_Resistor, Order_Chip
 from main.models import Chip, Resistor, Capacitor
 from .basket import Basket
 from .forms import BasketAddProductForm, OrderForm
+from django.contrib.auth.decorators import login_required, permission_required
 
 # Детали корзины
 def basket_detail(request):
@@ -12,6 +13,7 @@ def basket_detail(request):
     return render(request, 'basket/detail.html', {'basket': basket})
 
 # Удаление из корзины
+@permission_required(['perms.main.add_order'])
 def basket_remove(request, product_type, product_id):
     basket = Basket(request)
     
@@ -56,12 +58,10 @@ def basket_add(request, product_type, product_id):
 
     return redirect('basket_detail')
 
-# Страница оформления заказа
 @login_required
 def open_order(request):
     return render(request, 'order/order_form.html', {'form_order': OrderForm()})
 
-# Покупка корзины → создание заказа
 @login_required
 def basket_buy(request):
     basket = Basket(request)

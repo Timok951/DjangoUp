@@ -7,7 +7,6 @@ from basket.views import basket_remove, basket_clear, basket_buy, open_order, ba
 urlpatterns = [
     path('', basket_detail, name='basket_detail'),
 
-    # Эти маршруты относятся к корзине напрямую
     path('remove/<str:product_type>/<int:product_id>/', basket_remove, name='basket_remove'),
     path('clear/', basket_clear, name='basket_clear'),
     path('buy/', basket_buy, name='basket_buy'),

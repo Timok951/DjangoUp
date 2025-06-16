@@ -10,7 +10,7 @@
 <p>Тип продукта {{capacitor.product_type}}</p>
 
 
-{% if user.is_authenticated %}
+{% if perms.main.add_order %}
 <form method="post" action="{% url 'basket_add' 'capacitor' capacitor.pk %}">
     {% csrf_token %}
     

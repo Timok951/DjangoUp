@@ -87,6 +87,7 @@ DATABASES = {
 }
 
 AUTH_USER_MODEL = 'main.User'
+
 BASKET_SESSION_ID = 'basket'
 
 # Password validation

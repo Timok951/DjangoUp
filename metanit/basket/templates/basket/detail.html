@@ -45,11 +45,8 @@
             </tbody>
         </table>
 
-        <p>
-            {{ request.session.basket|default:"Нет корзины в сессии" }}
-        </p>
 
-        <div class="basket-summary">
+        <div >
             <p>Всего позиций: <strong>{{ basket|length }}</strong></p>
             <p>Общая сумма: <strong>{{ basket.get_total_price }} ₽</strong></p>
         </div>
