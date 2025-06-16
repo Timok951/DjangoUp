@@ -1,88 +1,62 @@
-from django.shortcuts import render, redirect, get_object_or_404
-from django.views.decorators.http import require_POST
-from django.contrib.auth.decorators import login_required
-from main.models import Order, Order_Capacitor, Order_Resistor, Order_Chip
-from shop.models import Chip, Resistor, Capacitor
-from .basket import Basket
-from .forms import BasketAddProductForm, OrderForm
+from decimal import Decimal
+from django.conf import settings
 
-# Детали корзины
-def basket_detail(request):
-    basket = Basket(request)
-    return render(request, 'basket/detail.html', {'basket': basket})
+class Basket:
+    def __init__(self, request):
+        self.session = request.session
+        basket = self.session.get(settings.BASKET_SESSION_ID)
+        if not basket:
+            basket = self.session[settings.BASKET_SESSION_ID] = {}
+        self.basket = basket
 
-# Удаление из корзины
-def basket_remove(request, product_type, product_id):
-    basket = Basket(request)
-    
-    model = {'chip': Chip, 'resistor': Resistor, 'capacitor': Capacitor}.get(product_type)
-    if not model:
-        return redirect('basket_detail')
-    
-    product = get_object_or_404(model, pk=product_id)
-    basket.remove(product_type, product)
-    return redirect('basket_detail')
+    def __iter__(self):
+        from main.models import Chip, Resistor, Capacitor
 
-# Очистка корзины
-def basket_clear(request):
-    basket = Basket(request)
-    basket.clear()
-    return redirect('basket_detail')
+        keys = self.basket.keys()
+        basket_copy = self.basket.copy()
+        for key in keys:
+            type_, product_id = key.split(':')
+            product = None
+            if type_ == 'chip':
+                product = Chip.objects.filter(id=product_id).first()
+            elif type_ == 'resistor':
+                product = Resistor.objects.filter(id=product_id).first()
+            elif type_ == 'capacitor':
+                product = Capacitor.objects.filter(id=product_id).first()
 
-# Добавление товара в корзину
-@require_POST
-def basket_add(request, product_type, product_id):
-    basket = Basket(request)
-    
-    model = {'chip': Chip, 'resistor': Resistor, 'capacitor': Capacitor}.get(product_type)
-    if not model:
-        return redirect('basket_detail')
+            if product:
+                item = basket_copy[key]
+                item['product'] = product
+                item['type'] = type_
+                yield item
 
-    product = get_object_or_404(model, pk=product_id)
-    form = BasketAddProductForm(request.POST)
-    if form.is_valid():
-        basket.add(
-            product=product,
-            count=form.cleaned_data['count'],
-            update_count=form.cleaned_data['reload'],
-            product_type=product_type
-        )
-    return redirect('basket_detail')
+    def add(self, product, count=1, update_count=False, product_type=None):
+        product_id = str(product.id)
+        key = f"{product_type}:{product_id}"
+        if key not in self.basket:
+            self.basket[key] = {'count': 0, 'price': str(product.price), 'type': product_type}
+        if update_count:
+            self.basket[key]['count'] = count
+        else:
+            self.basket[key]['count'] += count
+        self.save()
 
-# Страница оформления заказа
-@login_required
-def open_order(request):
-    return render(request, 'order/order_form.html', {'form_order': OrderForm()})
+    def remove(self, product_type, product):
+        key = f"{product_type}:{product.id}"
+        if key in self.basket:
+            del self.basket[key]
+            self.save()
 
-# Покупка корзины → создание заказа
-@login_required
-def basket_buy(request):
-    basket = Basket(request)
-    if len(basket) <= 0:
-        return redirect('basket_detail')
+    def clear(self):
+        self.session[settings.BASKET_SESSION_ID] = {}
+        self.session.modified = True
 
-    if request.method == 'POST':
-        form = OrderForm(request.POST)
-        if form.is_valid():
-            order = form.save(commit=False)
-            order.user = request.user
-            order.save()
+    def save(self):
+        self.session[settings.BASKET_SESSION_ID] = self.basket
+        self.session.modified = True
 
-            for item in basket:
-                product = item['product']
-                count = item['count']
-                type_ = item['type']
+    def __len__(self):
+        return sum(item['count'] for item in self.basket.values())
 
-                if type_ == 'chip':
-                    Order_Chip.objects.create(order=order, chip=product, amount=count)
-                elif type_ == 'resistor':
-                    Order_Resistor.objects.create(order=order, resistor=product, amount=count)
-                elif type_ == 'capacitor':
-                    Order_Capacitor.objects.create(order=order, capacitor=product, amount=count)
-
-            basket.clear()
-            return redirect('basket_detail')
-    else:
-        form = OrderForm()
-
-    return render(request, 'order/order_form.html', {'form_order': form})
+    def get_total_price(self):
+        return sum(Decimal(item['price']) * item['count'] for item in self.basket.values())

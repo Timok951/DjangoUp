@@ -1,5 +1,7 @@
 from django import forms
-from .models import Capacitor, Category, Producer, Product_type, Resistor, Chip, User, Order, Order_Capacitor, Order_Resistor, Order_Chip
+from .models import Capacitor, Category, Producer, Product_type, Resistor, Chip, Order, Order_Capacitor, Order_Resistor, Order_Chip
+from .models import User
+
 
 class CapacitorForm(forms.ModelForm):
     class Meta:
@@ -56,9 +58,46 @@ class Order_ChipForm(forms.ModelForm):
         model = Order_Chip
         fields = ['chip', 'amount', 'order']
 
+from django import forms
+from django.contrib.auth.forms import UserCreationForm
+
+class RegistrationForm(UserCreationForm):
+    nick = forms.CharField(
+        label='Логин пользователя',
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        min_length=2
+    )
+    email = forms.EmailField(
+        label='Электронная почта',
+        widget=forms.EmailInput(attrs={'class': 'form-control'}),
+    )
+    phone = forms.CharField(
+        label='Телефон',
+        required=False,
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+    )
+    password1 = forms.CharField(
+        label='Придумайте пароль',
+        widget=forms.PasswordInput(attrs={'class': 'form-control'}),
+    )
+    password2 = forms.CharField(
+        label='Повторите пароль',
+        widget=forms.PasswordInput(attrs={'class': 'form-control'}),
+    )
+
+    class Meta:
+        model = User
+        fields = ['nick', 'email', 'phone', 'password1', 'password2']
+
+from django import forms
+from django.contrib.auth.forms import AuthenticationForm
 
 class LoginForm(AuthenticationForm):
-    username = forms.Charfield(
+    username = forms.CharField(
         label="Логин пользователя",
-        
+        widget=forms.TextInput(attrs={'class': 'form-control'})
+    )
+    password = forms.CharField(
+        label="Пароль",
+        widget=forms.PasswordInput(attrs={'class': 'form-control'})
     )

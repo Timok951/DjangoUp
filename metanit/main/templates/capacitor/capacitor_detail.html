@@ -9,13 +9,19 @@
 <p>Производитель {{capacitor.producer}}</p>
 <p>Тип продукта {{capacitor.product_type}}</p>
 
-{% if request.user.is_authenicated %}
-    <form method="post" action={% url "basket_add" capacitor.pk %}>
-        {% csrf_token %}
-        {{form_basket}}
-        <button type="submit">Добавьте в корзину</button>
-{% endif %}
 
+{% if user.is_authenticated %}
+<form method="post" action="{% url 'basket_add' 'capacitor' capacitor.pk %}">
+    {% csrf_token %}
+    
+    <label for="id_count">Количество:</label>
+    <input type="number" name="count" id="id_count" value="1" min="1" required>
+
+    <input type="hidden" name="reload" value="False">
+
+    <button type="submit">Добавить в корзину</button>
+</form>
+{% endif %}
 
 <a href="{% url 'capacitor_list' %}">Вернутся к списку конденсаторов </a>
 <a href="{% url 'capacitor_update'  capacitor.pk %}"> Редактировать </a>

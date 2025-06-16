@@ -107,18 +107,53 @@ class Meta:
     verbose_name = 'Чип'
     verbose_name_plural = 'Чип'
 
-class User(models.Model):
-    nick = models.CharField(max_length=MAX_LENGTH, verbose_name='Ник пользователя')
-    phone=models.CharField(max_length=14, verbose_name='Телефон', blank=True)
-    email=models.CharField(max_length=MAX_LENGTH, verbose_name='Почта')
-    password=models.TextField(max_length=MAX_LENGTH, verbose_name='Пароль')
+from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin, BaseUserManager
+from django.db import models
+
+MAX_LENGTH = 255
+
+
+#AbstractBaseUser — это абстрактная базовая модель, от которой ты наследуешься, чтобы не писать всю логику с нуля (например, поле password, методы set_password(), check_password() и др.).
+
+class CustomUserManager(BaseUserManager):
+    def create_user(self, nick, password=None, **extra_fields):
+        if not nick:
+            raise ValueError('Пользователь должен иметь ник')
+        user = self.model(nick=nick, **extra_fields)
+        user.set_password(password)
+        user.save(using=self._db)
+        return user
+
+    def create_superuser(self, nick, password, **extra_fields):
+        extra_fields.setdefault('is_staff', True)
+        extra_fields.setdefault('is_superuser', True)
+        return self.create_user(nick, password, **extra_fields)
+
+
+class User(AbstractBaseUser, PermissionsMixin):
+    nick = models.CharField(
+        max_length=MAX_LENGTH,
+        verbose_name='Ник пользователя',
+        unique=True
+    )
+    phone = models.CharField(max_length=14, verbose_name='Телефон', blank=True)
+    email = models.EmailField(verbose_name='Почта', blank=True, null=True)
+    is_active = models.BooleanField(default=True)
+    is_staff = models.BooleanField(default=False)
+
+    objects = CustomUserManager()
+
+    USERNAME_FIELD = 'nick'  
+    REQUIRED_FIELDS = ['email']  
 
     def __str__(self):
         return self.nick
-    
+
     class Meta:
         verbose_name = 'Пользователь'
-        verbose_name_plural = 'Пользователь'
+        verbose_name_plural = 'Пользователи'
+
+
 
 class Order(models.Model):
     create_date = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания заказа')

@@ -1,61 +1,41 @@
-{% extends 'base.html' %} {% block content%}
+{% extends 'base.html' %}
+{% block content %}
 
-<h1>Чип: {{ chip.name }}</h1>
+<h1>{{ chip.name }}</h1>
 
-<table>
-  <tr>
-    <th>ID</th>
-    <td>{{ chip.id }}</td>
-  </tr>
-  <tr>
-    <th>Название</th>
-    <td>{{ chip.name }}</td>
-  </tr>
-  <tr>
-    <th>Описание</th>
-    <td>{{ chip.description|default:"—" }}</td>
-  </tr>
-  <tr>
-    <th>Цена</th>
-    <td>{{ chip.price|default:"—" }} ₽</td>
-  </tr>
-  <tr>
-    <th>Изображение</th>
-    <td>
-      {% if chip.photo %}
-      <img
-        src="{{ chip.photo.url }}"
-        alt="Изображение"
-        style="max-width: 200px"
-      />
-      {% else %} Нет изображения {% endif %}
-    </td>
-  </tr>
-  <tr>
-    <th>Дата добавления</th>
-    <td>{{ chip.create_date|date:"d.m.Y H:i" }}</td>
-  </tr>
-  <tr>
-    <th>Доступен к заказу</th>
-    <td>{{ chip.is_exists|yesno:"Да,Нет" }}</td>
-  </tr>
-  <tr>
-    <th>Категория</th>
-    <td>{{ chip.category.name }}</td>
-  </tr>
-  <tr>
-    <th>Производитель</th>
-    <td>{{ chip.producer.name }}</td>
-  </tr>
-  <tr>
-    <th>Тип продукта</th>
-    <td>{{ chip.product_type.name }}</td>
-  </tr>
-</table>
+<p>{{ chip.description|default:"Описание отсутствует." }}</p>
+<p>Цена: {{ chip.price }} ₽</p>
+<p>Дата добавления: {{ chip.create_date|date:"d.m.Y H:i" }}</p>
+<p>Доступен к заказу: {{ chip.is_exists|yesno:"Да,Нет" }}</p>
 
-<br />
+{% if chip.photo %}
+    <img src="{{ chip.photo.url }}" alt="{{ chip.name }}" style="max-width: 200px;">
+{% else %}
+    <p>Нет изображения</p>
+{% endif %}
 
-<a href="{% url 'chip_list' %}">← Вернуться к списку</a> |
+<p>Категория: {{ chip.category.name }}</p>
+<p>Производитель: {{ chip.producer.name }}</p>
+<p>Тип продукта: {{ chip.product_type.name }}</p>
+
+
+<br>
+
+{% if user.is_authenticated %}
+<form method="post" action="{% url 'basket_add' 'chip' chip.pk %}">
+    {% csrf_token %}
+    
+    <label for="id_count">Количество:</label>
+    <input type="number" name="count" id="id_count" value="1" min="1" required>
+
+    <input type="hidden" name="reload" value="False">
+
+    <button type="submit">Добавить в корзину</button>
+</form>
+{% endif %}
+
+<a href="{% url 'chip_list' %}">Вернуться к списку чипов</a> |
 <a href="{% url 'chip_update' chip.pk %}">Редактировать</a> |
-<a href="{% url 'chip_delete' chip.pk %}">Удалить</a>
+<a href="{% url 'chip_confirm_delete' chip.pk %}">Удалить</a>
+
 {% endblock %}

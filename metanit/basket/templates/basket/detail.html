@@ -1,2 +1,66 @@
-{%extends 'base.html'%} {% load static %} {% block title_name %} Ваша корзина
-{%endblock title_name %}
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title_name %}Ваша корзина{% endblock title_name %}
+
+{% block content %}
+<div class="basket-container">
+    <h1> Ваша корзина</h1>
+
+    {% if basket %}
+        <table>
+            <thead>
+                <tr>
+                    <th>Изображение</th>
+                    <th>Название</th>
+                    <th>Тип товара</th>
+                    <th>Кол-во</th>
+                    <th>Цена за шт.</th>
+                    <th>Сумма</th>
+                    <th>Удалить</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in basket %}
+                    {% with item.product as product %}
+                        <tr>
+                            <td>
+                                {% if product.photo %}
+                                    <img src="{{ product.photo.url }}" alt="{{ product.name }}" width="80" height="80">
+                                {% else %}
+                                    <img src="{% static 'main/image/no_photo.jpg' %}" alt="Нет фото" width="80" height="80">
+                                {% endif %}
+                            </td>
+                            <td>{{ product.name }}</td>
+                            <td>{{ item.type|title }}</td>
+                            <td>{{ item.count }} шт</td>
+                            <td>{{ item.price }} ₽</td>
+                            <td>{{ item.price|floatformat:2|floatformat:"g" | floatformat:"0" | add:item.count|floatformat:0 }} ₽</td>
+                            <td>
+                                <a href="{% url 'basket_remove' item.type product.pk %}">Удалить</a>
+                            </td>
+                        </tr>
+                    {% endwith %}
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <p>
+            {{ request.session.basket|default:"Нет корзины в сессии" }}
+        </p>
+
+        <div class="basket-summary">
+            <p>Всего позиций: <strong>{{ basket|length }}</strong></p>
+            <p>Общая сумма: <strong>{{ basket.get_total_price }} ₽</strong></p>
+        </div>
+
+        <div class="basket-actions">
+            <a href="{% url 'basket_clear' %}"> Очистить корзину</a> |
+            <a href="{% url 'all_products' %}"> Вернуться к товарам</a> |
+            <a href="{% url 'order_open' %}"> Оформить заказ</a>
+        </div>
+    {% else %}
+        <p>🛍 Ваша корзина пуста. <a href="{% url 'all_products' %}">Перейти в каталог</a></p>
+    {% endif %}
+</div>
+{% endblock content %}

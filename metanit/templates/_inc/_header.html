@@ -10,11 +10,22 @@
     <a href="{% url 'location' %}">Как нас найти</a> |
     <a href="{% url 'products' %}">Товары</a> |
     <a href="{% url 'all_products' %}">Все товары</a> |
-    <a href="{% url 'cart' %}">Корзина</a>
+    <a href="{% url 'basket_detail' %}">Корзина</a>
     <a href="{% url 'capacitor_list' %}">Конденсаторы</a>
     <a href="{% url 'category_list' %}">категории</a>
     <a href="{% url 'chip_list' %}">чипы</a>
     <a href="{% url 'producer_list' %}">производители</a>
     <a href="{% url 'product_type_list' %}">тип продуктов</a>
+
+
+    {% if user.is_authenticated %}
+    <span>Привет, {{ user.nick }}</span> |
+    <a href="{% url 'logout_page' %}">Выход</a>
+  {% else %}
+    <a href="{% url 'registration_page' %}">Регистрация</a> |
+    <a href="{% url 'login' %}">Вход</a>
+  {% endif %}
+
+
   </nav>
 </header>

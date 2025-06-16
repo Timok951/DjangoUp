@@ -3,6 +3,7 @@ from django.views.generic import ListView, DetailView, CreateView, DeleteView, U
 from django.urls import reverse_lazy
 from .models import *
 from .forms import *
+from basket.forms import BasketAddProductForm
 
 def home(request):
     return render(request, 'main/home.html')
@@ -40,7 +41,7 @@ class CapacitorDetailView(DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        cpntext['form_basket'] - BasketAddProductForm()
+        context['form_basket'] = BasketAddProductForm()
         return context
 
 class CapacitorCreateView(CreateView):
@@ -287,6 +288,11 @@ class Order_ResistorDetailVeiw(DetailView):
     template_name = 'order_resistor/order_resistor_form.html'
     context_object_name = 'order_resistor'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form_basket'] = BasketAddProductForm()
+        return context
+
 class Order_ResistorCreateView(CreateView):
     model = Order_Resistor
     form_class = Order_ResistorForm
@@ -314,6 +320,11 @@ class Order_ChipDetailVeiw(DetailView):
     template_name = 'order_chip/order_chip_form.html'
     context_object_name = 'order_chip'
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['form_basket'] = BasketAddProductForm()
+        return context
+
 class Order_ChipCreateView(CreateView):
     model = Order_Chip
     form_class = Order_ChipForm
@@ -331,17 +342,30 @@ class Order_ChipDeleteView(DeleteView):
     template_name = 'order_chip/order_chip_confirm_delete.html'
     success_url = reverse_lazy('order_chip_list')
 
-def login_user(request):
-    if request.method == 'POST':
-        form = LoginForm(data=request.POST)
-        if form.is_valid():
-            if request.Get.get('next'):
-                return redirect(request.GET.get('next'))
-            return redirect('capacitor_list_view')
-        else:
-            form = LoginForm()
-            return render(request, 'auth/login.html', context={'form':form})
+from django.contrib.auth import authenticate, login, logout
+from django.shortcuts import render, redirect
+from .forms import LoginForm, RegistrationForm
 
-def logout_user(requers):
+def login_user(request):
+    form = LoginForm(data=request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            user = form.get_user()
+            login(request, user)
+            next_url = request.GET.get('next')
+            return redirect(next_url if next_url else 'capacitor_list')
+    return render(request, 'auth/login.html', {'form': form})
+
+def registration_user(request):
+    form = RegistrationForm(request.POST or None)
+    if request.method == 'POST':
+        if form.is_valid():
+            user = form.save()
+            login(request, user)  
+            return redirect('capacitor_list')
+    return render(request, 'auth/register.html', {'form': form})
+
+def logout_user(request):
     logout(request)
-    return redirect('capacitor_list_view')
+    return redirect('capacitor_list')
+

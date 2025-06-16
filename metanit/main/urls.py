@@ -40,4 +40,9 @@ urlpatterns = [
     path('chip/create/', ChipCreateView.as_view(), name='chip_create'),
     path('chip/<int:pk>/update/', ChipUpdateView.as_view(), name='chip_update'),
     path('chip/<int:pk>/delete/', ChipDeleteView.as_view(), name='chip_confirm_delete'),
+
+    path('login/', login_user, name='login'),
+    path('registration/', registration_user, name='registration_page'),
+    path('logout/', logout_user, name='logout_page'),
+
 ]

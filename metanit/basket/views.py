@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_POST
 from django.contrib.auth.decorators import login_required
 from main.models import Order, Order_Capacitor, Order_Resistor, Order_Chip
-from shop.models import Chip, Resistor, Capacitor
+from main.models import Chip, Resistor, Capacitor
 from .basket import Basket
 from .forms import BasketAddProductForm, OrderForm
 
@@ -33,7 +33,8 @@ def basket_clear(request):
 @require_POST
 def basket_add(request, product_type, product_id):
     basket = Basket(request)
-    
+    print(">>> ДОБАВЛЕНИЕ В КОРЗИНУ:", product_type, product_id)
+    print(">>> POST:", request.POST)
     model = {'chip': Chip, 'resistor': Resistor, 'capacitor': Capacitor}.get(product_type)
     if not model:
         return redirect('basket_detail')
@@ -41,12 +42,18 @@ def basket_add(request, product_type, product_id):
     product = get_object_or_404(model, pk=product_id)
     form = BasketAddProductForm(request.POST)
     if form.is_valid():
+        print("✅ Форма валидна")
         basket.add(
             product=product,
             count=form.cleaned_data['count'],
             update_count=form.cleaned_data['reload'],
             product_type=product_type
         )
+
+        print("✅ Добавлено в сессию:", request.session.get('basket'))
+    else:
+        print("❌ Ошибка формы:", form.errors)
+
     return redirect('basket_detail')
 
 # Страница оформления заказа
