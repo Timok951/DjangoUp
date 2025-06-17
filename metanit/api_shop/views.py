@@ -45,12 +45,36 @@ class ResistorViewSet(viewsets.ModelViewSet):
     permission_classes = [CustomPermissions]
     pagination_class = PaginationPage
 
+    def get_queryset(self):
+        queryset=Resistor.objects.all()
+        name = self.request.query_params.get('name', None)
+        description = self.request.query_params.get('description', None)
+
+        if name is not None:
+            queryset = queryset.filter(name__icontains=name)
+        elif description is not None:
+            queryset = queryset.filter(description__icontains=description)
+
+        return queryset
+
 
 class ChipViewSet(viewsets.ModelViewSet):
     queryset = Chip.objects.all()
     serializer_class = ChipSerializer
     permission_classes = [CustomPermissions]
     pagination_class = PaginationPage
+
+    def get_queryset(self):
+        queryset=Chip.objects.all()
+        name = self.request.query_params.get('name', None)
+        description = self.request.query_params.get('description', None)
+
+        if name is not None:
+            queryset = queryset.filter(name__icontains=name)
+        elif description is not None:
+            queryset = queryset.filter(description__icontains=description)
+
+        return queryset
 
 
 class UserViewSet(viewsets.ModelViewSet):
