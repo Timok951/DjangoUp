@@ -39,7 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'main',
-    'basket'
+    'basket',
+    'rest_framework',
+    'api_shop'
 ]
 
 MIDDLEWARE = [
@@ -138,3 +140,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 SESSION_ENGINE ='django.contrib.sessions.backends.signed_cookies'
 
 LOGIN_URL = '/login'
+
+REST_FRAMEWORK = {
+    'DATETIME_FORMAT': "%Y-%m %d %H:%M:%S.%f%z"
+}

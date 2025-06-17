@@ -8,6 +8,7 @@ from .forms import BasketAddProductForm, OrderForm
 from django.contrib.auth.decorators import login_required, permission_required
 
 # Детали корзины
+@permission_required(['perms.main.add_order'])
 def basket_detail(request):
     basket = Basket(request)
     return render(request, 'basket/detail.html', {'basket': basket})
@@ -26,12 +27,14 @@ def basket_remove(request, product_type, product_id):
     return redirect('basket_detail')
 
 # Очистка корзины
+@permission_required(['perms.main.add_order'])
 def basket_clear(request):
     basket = Basket(request)
     basket.clear()
     return redirect('basket_detail')
 
 # Добавление товара в корзину
+@permission_required(['perms.main.add_order'])
 @require_POST
 def basket_add(request, product_type, product_id):
     basket = Basket(request)
@@ -58,10 +61,12 @@ def basket_add(request, product_type, product_id):
 
     return redirect('basket_detail')
 
+@permission_required(['perms.main.add_order'])
 @login_required
 def open_order(request):
     return render(request, 'order/order_form.html', {'form_order': OrderForm()})
 
+@permission_required(['perms.main.add_order'])
 @login_required
 def basket_buy(request):
     basket = Basket(request)
