@@ -2,8 +2,23 @@
 
 <!DOCTYPE html>
 <html lang="ru" />
-<header>
+  <head>
+    <link rel="stylesheet" href = "{% static "css/header.css" %}">
+
+  </head>
+<header class="header">
+    <div class="wrapper">
+
+      <div class="header__logo">
+        <a href="/" class="header__logo-link">
+          <img src="./img/svg/" alt="" class="header__logo-pic">
+        </a>
+      </div>
+
+
+    </div>
   <nav>
+    
     <a href="{% url 'home' %}">Главная</a> |
     <a href="{% url 'about' %}">О компании</a> |
     <a href="{% url 'contacts' %}">Контакты</a> |

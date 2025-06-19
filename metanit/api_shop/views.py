@@ -95,33 +95,21 @@ class OrderViewSet(mixins.ListModelMixin,
     pagination_class = PaginationPage
 
 
-class OrderCapacitorViewSet(mixins.ListModelMixin, 
-                   mixins.RetrieveModelMixin,
-                   mixins.CreateModelMixin,
-                    mixins.UpdateModelMixin,
-                    viewsets.GenericViewSet):
+class OrderCapacitorViewSet(viewsets.ModelViewSet):
     queryset = Order_Capacitor.objects.all()
     serializer_class = OrderCapacitorSerializer
     permission_classes = [CustomPermissions]
     pagination_class = PaginationPage
 
 
-class OrderResistorViewSet(mixins.ListModelMixin, 
-                   mixins.RetrieveModelMixin,
-                   mixins.CreateModelMixin,
-                   mixins.UpdateModelMixin,
-                    viewsets.GenericViewSet):
+class OrderResistorViewSet(viewsets.ModelViewSet):
     queryset = Order_Resistor.objects.all()
     serializer_class = OrderResistorSerializer
     permission_classes = [CustomPermissions]
     pagination_class = PaginationPage
 
 
-class OrderChipViewSet(mixins.ListModelMixin, 
-                   mixins.RetrieveModelMixin,
-                   mixins.CreateModelMixin,
-                    mixins.UpdateModelMixin,
-                    viewsets.GenericViewSet):
+class OrderChipViewSet(viewsets.ModelViewSet):
     queryset = Order_Chip.objects.all()
     serializer_class = OrderChipSerializer
     permission_classes = [CustomPermissions]
