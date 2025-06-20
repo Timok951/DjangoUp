@@ -7,39 +7,59 @@
 
   </head>
 <header class="header">
-    <div class="wrapper">
+      <div class="header__upper">
+        <div class="header__wrapper__upper">
+            <nav class="header__upper__nav">
+              <li class="header__upper__list">
+                <p class="header__upper__link"> Понедельник-пятница </p >
+                <a href="{% url 'contacts' %}" class="header__upper__link">Контакты</a> 
+                <a href="{% url 'location' %}" class="header__upper__link" >Как нас найти</a> 
+              </li>
+            </nav>
+        </div>
+      </div>
+
+      <div class="header__wrapper">
+
 
       <div class="header__logo">
         <a href="/" class="header__logo-link">
-          <img src="./img/svg/" alt="" class="header__logo-pic">
+          <img src={% static "img/svg/logo.svg" %} alt="100volts logo" class="header__logo-pic" heg>
         </a>
       </div>
+
+      <nav class="header__nav">
+        <li class="header__list">
+          <a href="{% url 'home' %}" class="header__link">Главная</a>
+          <a href="{% url 'about' %}" class="header__link" >О компании</a> 
+          <a href="{% url 'all_products' %}" class="header__link" >Товары</a>
+          <a href="{% url 'basket_detail' %}" class="header__link" >Корзина</a>
+          
+          <a href="{% url 'category_list' %}" class="header__link" >категории</a>
+          <a href="{% url 'producer_list' %}" class="header__link">производители</a>
+          <a href="{% url 'product_type_list' %}" class="header__link" >тип продуктов</a>
+
+        </li>
+        {% if user.is_authenticated %}
+        <span>Вы вошли как, {{ user.nick }}</span>
+        <a href="{% url 'logout_page' %}">Выход</a>
+
+      {% else %}
+        <a href="{% url 'registration_page' %}" class="header__link">Регистрация</a> |
+        <a href="{% url 'login' %}" class="header__link">Вход</a>
+      {% endif %}
+      </nav>
+      
+
 
 
     </div>
   <nav>
     
-    <a href="{% url 'home' %}">Главная</a> |
-    <a href="{% url 'about' %}">О компании</a> |
-    <a href="{% url 'contacts' %}">Контакты</a> |
-    <a href="{% url 'location' %}">Как нас найти</a> |
-    <a href="{% url 'products' %}">Товары</a> |
-    <a href="{% url 'all_products' %}">Все товары</a> |
-    <a href="{% url 'basket_detail' %}">Корзина</a>
-    <a href="{% url 'capacitor_list' %}">Конденсаторы</a>
-    <a href="{% url 'category_list' %}">категории</a>
-    <a href="{% url 'chip_list' %}">чипы</a>
-    <a href="{% url 'producer_list' %}">производители</a>
-    <a href="{% url 'product_type_list' %}">тип продуктов</a>
 
 
-    {% if user.is_authenticated %}
-    <span>Привет, {{ user.nick }}</span> |
-    <a href="{% url 'logout_page' %}">Выход</a>
-  {% else %}
-    <a href="{% url 'registration_page' %}">Регистрация</a> |
-    <a href="{% url 'login' %}">Вход</a>
-  {% endif %}
+
+
 
 
   </nav>

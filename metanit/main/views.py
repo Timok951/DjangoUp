@@ -23,8 +23,21 @@ def products(request):
 def categories(request):
     return render(request, 'main/categories.html')
 
+from django.shortcuts import render
+from .models import Chip, Capacitor, Resistor
+
 def all_products(request):
-    return render(request, 'main/all_products.html')
+    chips = Chip.objects.filter(is_exists=True)
+    capacitors = Capacitor.objects.filter(is_exist=True)
+    resistors = Resistor.objects.filter(is_exists=True)
+
+    context = {
+        'chips': chips,
+        'capacitors': capacitors,
+        'resistors': resistors,
+    }
+    return render(request, 'main/all_products.html', context)
+
 
 def cart(request):
     return render(request, 'main/cart.html')
@@ -368,4 +381,5 @@ def registration_user(request):
 def logout_user(request):
     logout(request)
     return redirect('capacitor_list')
+
 

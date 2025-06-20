@@ -1,9 +1,85 @@
 {% extends 'base.html' %}
+{% load static %}
 
-{% block title %}
-Все продукты
-{% endblock %}
+{% block title %}Все товары{% endblock %}
 
 {% block content %}
-<h1>Все продукты</h1>
+<h1>Все товары</h1>
+<div class="products-section">
+
+  <h2>Чипы</h2>
+  <div class="products-grid">
+    {% for chip in chips %}
+      <div class="product-card">
+        <img src="{{ chip.photo.url }}" alt="{{ chip.name }}" class="product-image">
+        <h3>{{ chip.name }}</h3>
+        <p>Цена: {{ chip.price }} ₽</p>
+
+        {% if perms.main.add_order %}
+        <form method="post" action="{% url 'basket_add' 'chip' chip.pk %}">
+          {% csrf_token %}
+          <label>Кол-во:
+            <input type="number" name="count" value="1" min="1" required>
+          </label>
+          <input type="hidden" name="reload" value="False">
+          <button type="submit">Добавить в корзину</button>
+        </form>
+        {% endif %}
+      </div>
+    {% empty %}
+      <p>Чипы отсутствуют</p>
+    {% endfor %}
+  </div>
+
+  <h2>Конденсаторы</h2>
+  <div class="products-grid">
+    {% for capacitor in capacitors %}
+      <div class="product-card">
+        <img src="{{ capacitor.photo.url }}" alt="{{ capacitor.name }}" class="product-image">
+        <h3>{{ capacitor.name }}</h3>
+        <p>Цена: {{ capacitor.price }} ₽</p>
+
+        {% if perms.main.add_order %}
+        <form method="post" action="{% url 'basket_add' 'capacitor' capacitor.pk %}">
+          {% csrf_token %}
+          <label>Кол-во:
+            <input type="number" name="count" value="1" min="1" required>
+          </label>
+          <input type="hidden" name="reload" value="False">
+          <button type="submit">Добавить в корзину</button>
+        </form>
+        {% endif %}
+      </div>
+    {% empty %}
+      <p>Конденсаторы отсутствуют</p>
+    {% endfor %}
+  </div>
+
+  <h2>Резисторы</h2>
+  <div class="products-grid">
+    {% for resistor in resistors %}
+      <div class="product-card">
+        <img src="{{ resistor.photo.url }}" alt="{{ resistor.name }}" class="product-image">
+        <h3>{{ resistor.name }}</h3>
+        <p>Цена: {{ resistor.price }} ₽</p>
+
+        {% if perms.main.add_order %}
+        <form method="post" action="{% url 'basket_add' 'resistor' resistor.pk %}">
+          {% csrf_token %}
+          <label>Кол-во:
+            <input type="number" name="count" value="1" min="1" required>
+          </label>
+          <input type="hidden" name="reload" value="False">
+          <button type="submit">Добавить в корзину</button>
+        </form>
+        {% endif %}
+      </div>
+    {% empty %}
+      <p>Резисторы отсутствуют</p>
+    {% endfor %}
+  </div>
+
+</div>
+
+
 {% endblock %}

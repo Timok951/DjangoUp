@@ -1,3 +1,6 @@
+{% extends 'base.html' %}
+
+
 <h1>{{ producer.name }}</h1>
 <p>{{ producer.description }}</p>
 <a href="{% url 'producer_list' %}">Вернуться к списку</a>

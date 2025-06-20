@@ -6,7 +6,6 @@ urlpatterns = [
     path('about/', about, name='about'),
     path('contacts/', contacts, name='contacts'),
     path('location/', location, name='location'),
-    path('products/', products, name='products'),
     path('categories/', categories, name='categories'),
     path('all-products/', all_products, name='all_products'),
     path('cart/', cart, name='cart'),
